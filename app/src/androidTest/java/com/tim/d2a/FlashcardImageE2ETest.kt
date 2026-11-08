@@ -49,6 +49,8 @@ class FlashcardImageE2ETest {
         val models = client.models("fixture-key")
         assertEquals(0.045, models.single().estimatedCost!!, 0.000001)
         val image = client.generate(rule.activity, "fixture-key", models.single(), FlashcardImagePrompt.build(draft()))
+        // test filename is a generated UUID or a fixed fixture value.
+        // foxguard: ignore[kt/no-path-traversal]
         val file = File(rule.activity.filesDir, "images/${image.filename}")
         try {
             assertTrue(file.isFile)
@@ -67,6 +69,8 @@ class FlashcardImageE2ETest {
             putString("fields", AnkiStudyNoteSpec.fields.joinToString(AnkiStudyNoteSpec.FIELD_SEPARATOR))
         })
         val card = draft().copy(imageFilename = "dictanki_abcd.png", noteKey = "image-save-${System.nanoTime()}")
+        // test filename is a generated UUID or a fixed fixture value.
+        // foxguard: ignore[kt/no-path-traversal]
         val file = File(context.filesDir, "images/${card.imageFilename}")
         file.parentFile!!.mkdirs()
         file.writeBytes(byteArrayOf(1, 2, 3))

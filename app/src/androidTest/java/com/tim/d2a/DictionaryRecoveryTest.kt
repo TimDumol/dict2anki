@@ -27,6 +27,8 @@ class DictionaryRecoveryTest {
     private fun uri(name: String) = Uri.parse("content://com.tim.d2a.dictionary-fixtures/$name.mdx")
 
     @Test fun failedImportThenRemoveAndReimportPersistsCleanly() = runBlocking {
+        // test filename uses a fixed prefix and a numeric monotonic timestamp.
+        // foxguard: ignore[kt/no-path-traversal]
         val file = File(context.cacheDir, "recovery-${System.nanoTime()}.sqlite")
         val dictionary = MdxDictionary(context.contentResolver, file)
         assertTrue(runCatching { dictionary.import(uri("bad")) }.isFailure)
@@ -80,6 +82,8 @@ class DictionaryRecoveryTest {
     }
 
     @Test fun cachedStartupReleasesAddButton() {
+        // test filename uses a fixed prefix and a numeric monotonic timestamp.
+        // foxguard: ignore[kt/no-path-traversal]
         val file = File(context.cacheDir, "startup-${System.nanoTime()}.sqlite")
         val dictionary = MdxDictionary(context.contentResolver, file)
         runBlocking { dictionary.import(uri("first")) }
@@ -104,6 +108,8 @@ class DictionaryRecoveryTest {
     }
 
     @Test fun streamedIndexFailureRollsBackAndAllowsRetry() {
+        // test filename uses a fixed prefix and a numeric monotonic timestamp.
+        // foxguard: ignore[kt/no-path-traversal]
         val file = File(context.cacheDir, "rollback-${System.nanoTime()}.sqlite")
         val index = com.tim.d2a.data.DictionaryIndex(file)
         val info = com.tim.d2a.data.DictionaryInfo("Streamed", "test:stream", supportsBinaryLookup = true)
@@ -117,6 +123,8 @@ class DictionaryRecoveryTest {
     }
 
     @Test fun imports160MegabytesOfDecodedRecordsWithoutWholeDictionaryAllocation() = runBlocking {
+        // test filename uses a fixed prefix and a numeric monotonic timestamp.
+        // foxguard: ignore[kt/no-path-traversal]
         val file = File(context.cacheDir, "large-${System.nanoTime()}.sqlite")
         val dictionary = MdxDictionary(context.contentResolver, file)
         val info = dictionary.import(uri("large"))
@@ -128,6 +136,8 @@ class DictionaryRecoveryTest {
     @Test fun importsRequestedPhoneDictionary() = runBlocking {
         val requestedUri = androidx.test.platform.app.InstrumentationRegistry.getArguments().getString("dictionaryUri")
         org.junit.Assume.assumeTrue(requestedUri != null)
+        // test filename uses a fixed prefix and a numeric monotonic timestamp.
+        // foxguard: ignore[kt/no-path-traversal]
         val dictionary = MdxDictionary(context.contentResolver, File(context.cacheDir, "phone-import-${System.nanoTime()}.sqlite"))
         val info = dictionary.import(Uri.parse(requestedUri))
         assertTrue(info.entryCount > 0)

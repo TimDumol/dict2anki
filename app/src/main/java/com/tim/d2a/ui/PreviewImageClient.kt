@@ -16,6 +16,8 @@ internal class PreviewImageClient(private val filesDir: File) : WebViewClient() 
         val uri = request.url
         val filename = uri.lastPathSegment.orEmpty()
         val stream = if (request.method == "GET" && uri.toString() == imageUrl(filename) && filename.matches(imageName)) {
+            // filename matches the strict imageName allowlist above.
+            // foxguard: ignore[kt/no-path-traversal]
             try { File(filesDir, "images/$filename").inputStream() }
             catch (_: IOException) { null }
         } else null

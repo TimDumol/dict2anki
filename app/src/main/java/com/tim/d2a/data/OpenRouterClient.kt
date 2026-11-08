@@ -1,7 +1,6 @@
 package com.tim.d2a.data
 
 import java.net.HttpURLConnection
-import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -269,7 +268,7 @@ class OpenRouterClient(
         }
 
         val endpoint = apiBaseUrl.trimEnd('/') + "/chat/completions"
-        val connection = (URL(endpoint).openConnection() as HttpURLConnection).apply {
+        val connection = openRouterConnection(endpoint).apply {
             requestMethod = "POST"
             connectTimeout = 20_000
             readTimeout = 90_000
@@ -293,7 +292,7 @@ class OpenRouterClient(
     }
 
     private fun get(path: String, apiKey: String? = null): JSONObject {
-        val connection = (URL(apiBaseUrl.trimEnd('/') + path).openConnection() as HttpURLConnection).apply {
+        val connection = openRouterConnection(apiBaseUrl.trimEnd('/') + path).apply {
             requestMethod = "GET"
             connectTimeout = 20_000
             readTimeout = 30_000

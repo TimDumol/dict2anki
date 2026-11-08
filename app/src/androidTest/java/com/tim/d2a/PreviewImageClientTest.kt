@@ -15,7 +15,11 @@ import org.junit.runner.RunWith
 class PreviewImageClientTest {
     @Test fun streamsOnlyValidatedLocalImagesAndHandlesMissingFiles() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
+        // fixed test fixture path inside the app cache directory.
+        // foxguard: ignore[kt/no-path-traversal]
         val root = File(instrumentation.targetContext.cacheDir, "preview-resource-test")
+        // fixed test fixture path inside the app cache directory.
+        // foxguard: ignore[kt/no-path-traversal]
         val image = File(root, "images/dictanki_abcd.png")
         image.parentFile!!.mkdirs()
         val bytes = byteArrayOf(1, 2, 3, 4)

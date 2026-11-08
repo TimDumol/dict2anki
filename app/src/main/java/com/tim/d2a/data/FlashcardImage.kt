@@ -5,8 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import java.io.File
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.Locale
 import java.util.UUID
 import kotlinx.coroutines.Dispatchers
@@ -87,7 +85,7 @@ internal class FlashcardImageClient(
 
     private fun request(path: String, key: String, body: JSONObject? = null): JSONObject {
         requestOverride?.let { return it(path, key, body) }
-        val connection = URL(baseUrl + path).openConnection() as HttpURLConnection
+        val connection = openRouterConnection(baseUrl + path)
         try {
             connection.connectTimeout = 20_000
             connection.readTimeout = if (body == null) 30_000 else 240_000
@@ -161,7 +159,11 @@ internal class FlashcardImageClient(
         check(bounds.outWidth > 0 && bounds.outHeight > 0 && bounds.outWidth.toLong() * bounds.outHeight <= 32_000_000) { "Unsupported image format or dimensions. Choose a raster image model." }
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: error("Could not decode generated image.")
         val filename = "dictanki_${UUID.randomUUID()}.png"
+        // private app directory and locally generated UUID filename; no user path.
+        // foxguard: ignore[kt/no-path-traversal]
         val directory = File(context.filesDir, "images").apply { mkdirs() }
+        // private app directory and locally generated UUID filename; no user path.
+        // foxguard: ignore[kt/no-path-traversal]
         try { File(directory, filename).outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) } }
         finally { bitmap.recycle() }
         GeneratedImage(filename, response.optJSONObject("usage")?.optString("cost")?.toDoubleOrNull()?.takeIf { it.isFinite() && it >= 0 })

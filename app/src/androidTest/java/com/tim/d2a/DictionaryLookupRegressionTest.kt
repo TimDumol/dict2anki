@@ -16,6 +16,8 @@ class DictionaryLookupRegressionTest {
 
     @Test fun retainsDifferentSensesOfTheSameHeadword() = runBlocking {
         for (persistent in listOf(false, true)) {
+            // test filename uses a fixed prefix and a numeric monotonic timestamp.
+            // foxguard: ignore[kt/no-path-traversal]
             val file = if (persistent) File(context.cacheDir, "senses-${System.nanoTime()}.sqlite") else null
             val dictionary = MdxDictionary(context.contentResolver, file)
             dictionary.import(uri("senses"))
@@ -33,6 +35,8 @@ class DictionaryLookupRegressionTest {
         }
     }
     @Test fun foldedSuggestionsAndDictionaryDirectionPersist() = runBlocking {
+        // test filename uses a fixed prefix and a numeric monotonic timestamp.
+        // foxguard: ignore[kt/no-path-traversal]
         val file = File(context.cacheDir, "folded-${System.nanoTime()}.sqlite")
         val dictionary = MdxDictionary(context.contentResolver, file)
         val source = uri("accented")

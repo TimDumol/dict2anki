@@ -1,5 +1,15 @@
 # Dict·Anki
 
+Security checks: run `bash scripts/security-check.sh` with
+[Foxguard](https://github.com/0sec-labs/foxguard),
+[Gitleaks](https://github.com/gitleaks/gitleaks), and
+[zizmor](https://docs.zizmor.sh/installation/) on PATH. Verified with versions
+0.12.0, 8.30.0, and 1.32.0 respectively. The script scans source, Git history,
+and current files; zizmor runs offline when GitHub Actions definitions exist.
+Foxguard 0.12.0 cannot parse `DictAnkiApp.kt`, `FlashcardImageControls.kt`, or
+`Theme.kt`; its clean result does not cover those files. Reviewed false positives
+have individual rule suppressions and explanations beside the relevant code.
+
 Native Android prototype for the “I just heard this” workflow:
 
 1. Choose Spanish → English or English → Spanish lookup and enter a word or phrase.
