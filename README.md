@@ -1,6 +1,9 @@
 # Dict·Anki
 
-Security checks: run `bash scripts/security-check.sh` with
+Security checks run in GitHub Actions on pull requests and pushes to `main`,
+with separate Foxguard, Gitleaks, and zizmor jobs. Findings fail the checks;
+Gitleaks scans the full Git history and current files. Run the same checks locally
+with `bash scripts/security-check.sh` with
 [Foxguard](https://github.com/0sec-labs/foxguard),
 [Gitleaks](https://github.com/gitleaks/gitleaks), and
 [zizmor](https://docs.zizmor.sh/installation/) on PATH. Verified with versions
